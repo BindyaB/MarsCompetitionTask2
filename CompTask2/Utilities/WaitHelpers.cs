@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,11 @@ namespace CompTask2.Utilities
 {
     public class WaitHelpers:CommonDriver
     {
+       
         public static void WaitToBeClickable(string locator, string locatorValue, int seconds)
         {
-            var wait = new WebDriverWait(driver, new TimeSpan(0, 0, seconds));
+            
+            WebDriverWait wait = new WebDriverWait(driver, new TimeSpan(0, 0, seconds));
             if (locator == "XPath")
             {
                 wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(By.XPath(locatorValue)));

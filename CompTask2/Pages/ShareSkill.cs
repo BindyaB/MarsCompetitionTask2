@@ -5,10 +5,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.PageObjects;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace CompTask2.Pages
 {
@@ -83,13 +80,21 @@ namespace CompTask2.Pages
 
         [FindsBy(How = How.XPath, Using = "//input[@type='button'and@value='Save']")]
         public IWebElement save;
+
+        [FindsBy(How = How.XPath, Using = "//a[@href='/Home/ListingManagement']")]
+        public IWebElement manageListingLink;
+
+        [FindsBy(How = How.XPath, Using = "//div[2]/div[1]/div[1]/table/tbody/tr[1]/td[3]")]
+        public IWebElement listTitle;
         
+
+
         public void AddShareSkill(string title, string description, string category, string subcategory,
                                     string addtags, string serviceType, string locationType, string daysAvaialable, string beginDate,
                                     string finishDate, string starttime, string endtime, string skilltrade, string skilltags, string charge,
                                     string active)
         {
-            WaitHelpers.WaitToExists("XPath", "//a[@class='ui basic green button']", 5);
+            WaitHelpers.WaitToExists("XPath", "//a[@class='ui basic green button']", 10);
             shareSkillButton.Click();
             titleTextbox.Click();
             titleTextbox.SendKeys(title);
@@ -207,19 +212,16 @@ namespace CompTask2.Pages
             autoIt.Send("{ENTER}");
             WaitHelpers.WaitToExists("XPath", "//input[@type='button'and@value='Save']", 5);
             save.Click();
-            
-        }
-        public string ReadAlertMessage()
-        {
-            WaitHelpers.WaitToBeVisible("CssSelector", "div.ns - effect - jelly", 5);
-            var alertMessage = driver.FindElement(By.CssSelector("div.ns-effect-jelly"));
-            string outcome = alertMessage.Text;
-            string expectedMessage = "Service Listing Added successfully";
-            Console.WriteLine(outcome);
-            Assert.That(outcome == expectedMessage, "Service listing not updated");
-            return outcome;
+
+            WaitHelpers.WaitToExists("XPath", "//a[@href='/Home/ListingManagement']", 10);
+            manageListingLink.Click();
+            WaitHelpers.WaitToExists("XPath", "//div[2]/div[1]/div[1]/table/tbody/tr[1]/td[3]", 10);
+            var listadded = listTitle.Text;
+            Assert.That(listadded == "Ballet Dancer", "Listing not found");
+
 
         }
+        
 
     }
 }

@@ -15,46 +15,54 @@ namespace CompTask2.Tests
         {
            
            driver = new ChromeDriver();
-
-            ExcelLib.PopulateInCollection(@"C:\IndustryConnect\CompetitionTask\MarsCompetitionTask2\CompTask2\TestDataLogin.xlsx");
-            Login loginObj = new Login(ExcelLib.ReadData(1, "url"), ExcelLib.ReadData(1, "username"), ExcelLib.ReadData(1, "password"));
-            
+                                    
         }
 
-        
 
         [Test, Order(1)]
-        public void CreateShareSkill()
+        public void ACreateShareSkill()
         {
             ShareSkill shareSkillObj = new ShareSkill();
-            
 
-            ExcelLib.PopulateInCollection(@"C:\IndustryConnect\CompetitionTask\MarsCompetitionTask2\CompTask2\TestDataShareskill.xlsx");
+            ExcelLib.PopulateInCollection(@"C:\IndustryConnect\CompetitionTask\MarsCompetitionTask2\CompTask2\TestDataShareskill.xlsx", "LoginDetails");
+            Login loginObj = new Login(ExcelLib.ReadData(1, "url"), ExcelLib.ReadData(1, "username"), ExcelLib.ReadData(1, "password"));
+
+
+            ExcelLib.PopulateInCollection(@"C:\IndustryConnect\CompetitionTask\MarsCompetitionTask2\CompTask2\TestDataShareskill.xlsx", "ShareSkill");
             
             shareSkillObj.AddShareSkill(ExcelLib.ReadData(1, "title"), ExcelLib.ReadData(1, "description"), ExcelLib.ReadData(1, "category"),
                 ExcelLib.ReadData(1, "subcategory"), ExcelLib.ReadData(1, "addtags"), ExcelLib.ReadData(1, "serviceType"), ExcelLib.ReadData(1, "locationType"),
                 ExcelLib.ReadData(1, "daysAvaialable"), ExcelLib.ReadData(1, "beginDate"), ExcelLib.ReadData(1, "finishDate"), ExcelLib.ReadData(1, "starttime"),
                 ExcelLib.ReadData(1, "endtime"), ExcelLib.ReadData(1, "skilltrade"), ExcelLib.ReadData(1, "skilltags"), ExcelLib.ReadData(1, "charge"),
                 ExcelLib.ReadData(1, "active"));
-           
-            shareSkillObj.ReadAlertMessage();
-
+                    
         }
 
         
+
         [Test, Order(2)]
-        public void ViewManageListing()
+        public void BViewManageListing()
         {
+                        
+            ExcelLib.PopulateInCollection(@"C:\IndustryConnect\CompetitionTask\MarsCompetitionTask2\CompTask2\TestDataViewListing.xlsx", "LoginDetails");
+            
+            Login loginObj = new Login(ExcelLib.ReadData(1, "url"), ExcelLib.ReadData(1, "username"), ExcelLib.ReadData(1, "password"));
+            
             ManageListing manageListingObj = new ManageListing();
             manageListingObj.ViewListing();
 
         }
 
         [Test, Order(3)]
-        public void EditManageListing()
+        public void CEditManageListing()
         {
+                       
             ManageListing manageListingObj = new ManageListing();
-            ExcelLib.PopulateInCollection(@"C:\IndustryConnect\CompetitionTask\MarsCompetitionTask2\CompTask2\TestDataEditShareSkill.xlsx");
+
+            ExcelLib.PopulateInCollection(@"C:\IndustryConnect\CompetitionTask\MarsCompetitionTask2\CompTask2\TestDataEditShareSkill.xlsx", "LoginDetails");
+            Login loginObj = new Login(ExcelLib.ReadData(1, "url"), ExcelLib.ReadData(1, "username"), ExcelLib.ReadData(1, "password"));
+            
+            ExcelLib.PopulateInCollection(@"C:\IndustryConnect\CompetitionTask\MarsCompetitionTask2\CompTask2\TestDataEditShareSkill.xlsx", "EditShareSkill");
             manageListingObj.EditListing(ExcelLib.ReadData(1, "title"), ExcelLib.ReadData(1, "description"), ExcelLib.ReadData(1, "addtags"), ExcelLib.ReadData(1, "skilltrade"),
                                           ExcelLib.ReadData(1, "skilltags"), ExcelLib.ReadData(1, "charge"));
             
@@ -65,19 +73,23 @@ namespace CompTask2.Tests
         [Test, Order(4)]
         public void DeleteManageListing()
         {
+            ExcelLib.PopulateInCollection(@"C:\IndustryConnect\CompetitionTask\MarsCompetitionTask2\CompTask2\TestDataDeleteListing.xlsx", "LoginDetails");
+            Login loginObj = new Login(ExcelLib.ReadData(1, "url"), ExcelLib.ReadData(1, "username"), ExcelLib.ReadData(1, "password"));
+
             ManageListing manageListingObj = new ManageListing();
             manageListingObj.DeleteListing();
             
            
         }
 
-
-
         [TearDown]
         public void CloseTest()
         {
-            //driver.Quit();
+            driver.Quit();
         }
+
+
+
 
 
     }

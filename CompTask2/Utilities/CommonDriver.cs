@@ -18,21 +18,23 @@ namespace CompTask2.Utilities
 
     public class ExcelLib
     {
-        public static DataTable ExcelToDataTable(string filename)
+        public static DataTable ExcelToDataTable(string filename, string sheetname)
         {
             FileStream stream = File.Open(filename, FileMode.Open, FileAccess.Read);
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream);
-            var result = excelReader.AsDataSet(new ExcelDataSetConfiguration()
-            {
-                ConfigureDataTable = _ => new ExcelDataTableConfiguration()
-                {
-                    UseHeaderRow = true
-                }
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream);
 
-            });
+                var result = excelReader.AsDataSet(new ExcelDataSetConfiguration()
+                {
+                    ConfigureDataTable = _ => new ExcelDataTableConfiguration()
+                    {
+                        UseHeaderRow = true
+                    }
+
+                });
+            stream.Close();
             DataTableCollection table = result.Tables;
-            DataTable resultTable = table["Sheet1"];
+            DataTable resultTable = table[sheetname];
             return resultTable;
 
 
@@ -41,9 +43,10 @@ namespace CompTask2.Utilities
 
         static List<DataCollection> dataCol = new List<DataCollection>();
 
-        public static void PopulateInCollection(string filename)
+        public static void PopulateInCollection(string filename, string sheetname)
         {
-            DataTable table = ExcelToDataTable(filename);
+            dataCol.Clear();
+            DataTable table = ExcelToDataTable(filename, sheetname);
             for (int row = 1; row <= table.Rows.Count; row++)
             {
                 for (int col = 0; col < table.Columns.Count; col++)

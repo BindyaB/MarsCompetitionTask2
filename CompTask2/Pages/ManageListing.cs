@@ -58,9 +58,9 @@ namespace CompTask2.Pages
 
         public string ViewListing()
         {
-            WaitHelpers.WaitToExists("XPath", "//a[@href='/Home/ListingManagement']", 4);
+            WaitHelpers.WaitToExists("XPath", "//a[@href='/Home/ListingManagement']", 10);
             manageListingLink.Click();
-            WaitHelpers.WaitToExists("XPath", "//i[@class='eye icon']", 3);
+            WaitHelpers.WaitToExists("XPath", "//i[@class='eye icon']", 10);
             eyeIcon.Click();
             string header = viewListing.Text;
             Console.WriteLine(header);
@@ -72,11 +72,11 @@ namespace CompTask2.Pages
 
         public void EditListing(string title, string description, string addtags, string skilltrade, string skilltags, string charge)
         {
-            WaitHelpers.WaitToExists("XPath", "//a[@href='/Home/ListingManagement']", 4);
+            WaitHelpers.WaitToExists("XPath", "//a[@href='/Home/ListingManagement']", 10);
             manageListingLink.Click();
-            WaitHelpers.WaitToExists("XPath", "//i[@class='outline write icon']", 3);
+            WaitHelpers.WaitToExists("XPath", "//i[@class='outline write icon']", 10);
             writeIcon.Click();
-            WaitHelpers.WaitToExists("Name", "title", 3);
+            Thread.Sleep(2000);
             titleTextbox.Clear();
             titleTextbox.SendKeys(title);
             descriptionTextbox.SendKeys(description);
@@ -98,7 +98,7 @@ namespace CompTask2.Pages
 
             save.Click();
 
-            WaitHelpers.WaitToExists("XPath", "//div[2]/div[1]/div[1]/table/tbody/tr/td[3]", 3);
+            WaitHelpers.WaitToExists("XPath", "//div[2]/div[1]/div[1]/table/tbody/tr/td[3]", 10);
             var manageLisitngTitle = driver.FindElement(By.XPath("//div[2]/div[1]/div[1]/table/tbody/tr/td[3]"));
             string checkTitle = manageLisitngTitle.Text;
             string expectedTitle = "All ages Ballet Dancer";
@@ -109,12 +109,11 @@ namespace CompTask2.Pages
 
         public void DeleteListing()
         {
-            WaitHelpers.WaitToExists("XPath", "//a[@href='/Home/ListingManagement']", 4);
+            WaitHelpers.WaitToExists("XPath", "//a[@href='/Home/ListingManagement']", 10);
             manageListingLink.Click();
-            WaitHelpers.WaitToExists("XPath", "//i[@class = 'remove icon']", 5);
+            WaitHelpers.WaitToExists("XPath", "//i[@class = 'remove icon']", 10);
             deleteIcon.Click();
             deleteYesbutton.Click();
-            WaitHelpers.WaitToExists("CssSelector", "div.ns-effect-jelly", 5);
             Thread.Sleep(3000);
             var alertMessage = driver.FindElement(By.CssSelector("div.ns-effect-jelly")).Text;
             Assert.IsTrue(alertMessage.Contains(" has been deleted"));
