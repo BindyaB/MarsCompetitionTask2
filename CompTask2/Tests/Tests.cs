@@ -96,6 +96,33 @@ namespace CompTask2.Tests
             manageListingObj.DeleteListing();
             test.Log(Status.Pass, "Deleted service listing");
 
+            
+
+        }
+
+        [Test, Order(5)]
+        public void NullNegativeTest()
+        {
+            test = extent.CreateTest("NullNegativeTest");
+            ExcelLib.PopulateInCollection(@"C:\IndustryConnect\CompetitionTask\MarsCompetitionTask2\CompTask2\TestDataNullValue.xlsx", "LoginDetails");
+            Login loginObj = new Login(ExcelLib.ReadData(1, "url"), ExcelLib.ReadData(1, "username"), ExcelLib.ReadData(1, "password"));
+
+            //ExcelLib.PopulateInCollection(@"C:\IndustryConnect\CompetitionTask\MarsCompetitionTask2\CompTask2\TestDataNullValue.xlsx", "ShareSkill");
+            ShareSkill skillObj = new ShareSkill();
+            skillObj.NegativeTestNullValues();
+            
+        }
+        [Test, Order(6)]
+        public void NegativeValueTest()
+        {
+            test = extent.CreateTest("NegativeValueTest");
+            ExcelLib.PopulateInCollection(@"C:\IndustryConnect\CompetitionTask\MarsCompetitionTask2\CompTask2\TestDataInvalidValue.xlsx", "LoginDetails");
+            Login loginObj = new Login(ExcelLib.ReadData(1, "url"), ExcelLib.ReadData(1, "username"), ExcelLib.ReadData(1, "password"));
+
+            ExcelLib.PopulateInCollection(@"C:\IndustryConnect\CompetitionTask\MarsCompetitionTask2\CompTask2\TestDataInvalidValue.xlsx", "ShareSkill");
+            ShareSkill skillObj = new ShareSkill();
+            skillObj.NegativeTestInvalidValues( ExcelLib.ReadData(1, "title"), ExcelLib.ReadData(1, "description"), ExcelLib.ReadData(1, "category"),
+                                                ExcelLib.ReadData(1, "beginDate"));
         }
 
         [TearDown]
