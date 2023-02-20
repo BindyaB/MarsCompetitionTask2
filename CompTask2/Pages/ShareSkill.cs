@@ -5,10 +5,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.PageObjects;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace CompTask2.Pages
 {
@@ -20,6 +17,8 @@ namespace CompTask2.Pages
             PageFactory.InitElements(driver, this);
 
         }
+
+        //Initiating web elements
 
         [FindsBy(How = How.XPath, Using = "//a[@class='ui basic green button']")]
         public IWebElement shareSkillButton;
@@ -83,13 +82,21 @@ namespace CompTask2.Pages
 
         [FindsBy(How = How.XPath, Using = "//input[@type='button'and@value='Save']")]
         public IWebElement save;
+
+        [FindsBy(How = How.XPath, Using = "//a[@href='/Home/ListingManagement']")]
+        public IWebElement manageListingLink;
+
+        [FindsBy(How = How.XPath, Using = "//div[2]/div[1]/div[1]/table/tbody/tr[1]/td[3]")]
+        public IWebElement listTitle;
         
+
+        //creating service listing
         public void AddShareSkill(string title, string description, string category, string subcategory,
                                     string addtags, string serviceType, string locationType, string daysAvaialable, string beginDate,
                                     string finishDate, string starttime, string endtime, string skilltrade, string skilltags, string charge,
                                     string active)
         {
-            WaitHelpers.WaitToExists("XPath", "//a[@class='ui basic green button']", 5);
+            WaitHelpers.WaitToExists("XPath", "//a[@class='ui basic green button']", 10);
             shareSkillButton.Click();
             titleTextbox.Click();
             titleTextbox.SendKeys(title);
@@ -207,19 +214,72 @@ namespace CompTask2.Pages
             autoIt.Send("{ENTER}");
             WaitHelpers.WaitToExists("XPath", "//input[@type='button'and@value='Save']", 5);
             save.Click();
-            
+
+            WaitHelpers.WaitToExists("XPath", "//a[@href='/Home/ListingManagement']", 10);
+            manageListingLink.Click();
+            WaitHelpers.WaitToExists("XPath", "//div[2]/div[1]/div[1]/table/tbody/tr[1]/td[3]", 10);
+            var listadded = listTitle.Text;
+            Assert.That(listadded == "Ballet Dancer", "Listing not found");
+
         }
-        public string ReadAlertMessage()
+        
+        public void NegativeTestNullValues()
         {
-            WaitHelpers.WaitToBeVisible("CssSelector", "div.ns - effect - jelly", 5);
-            var alertMessage = driver.FindElement(By.CssSelector("div.ns-effect-jelly"));
-            string outcome = alertMessage.Text;
-            string expectedMessage = "Service Listing Added successfully";
-            Console.WriteLine(outcome);
-            Assert.That(outcome == expectedMessage, "Service listing not updated");
-            return outcome;
+            WaitHelpers.WaitToExists("XPath", "//a[@class='ui basic green button']", 10);
+            shareSkillButton.Click();
+            
+            save.Click();
+
+            string titleError = driver.FindElement(By.XPath("//div[2]/div/form/div[1]/div/div[2]/div/div[2]/div")).Text;
+            string descriptionError = driver.FindElement(By.XPath("//div[2]/div/form/div[2]/div/div[2]/div[2]/div")).Text;
+            string categoryError = driver.FindElement(By.XPath("//div[2]/div/form/div[3]/div[2]/div[2]")).Text;
+            string addTagsError = driver.FindElement(By.XPath("//div[2]/div/form/div[4]/div[2]/div[2]")).Text;
+            string skillTagsError = driver.FindElement(By.XPath("//div[2]/div/form/div[8]/div[4]/div[2]")).Text;
+
+            Assert.That(titleError == "Title is required", "Title field accepts null values");
+            Assert.That(descriptionError == "Description is required", "Description field accepts null values");
+            Assert.That(categoryError == "Category is required", "Category field accepts null values");
+            Assert.That(addTagsError == "Tags are required", "Add Tags field accepts null values");
+            Assert.That(skillTagsError == "Tag is required", "Skill Tags field accepts null values");
+
+           
+        }
+
+        public void NegativeTestInvalidValues(string title, string description,string category, string beginDate)
+        {
+            WaitHelpers.WaitToExists("XPath", "//a[@class='ui basic green button']", 10);
+            shareSkillButton.Click();
+            titleTextbox.Click();
+            titleTextbox.SendKeys(title);
+            string titleText = titleTextbox.GetAttribute("Value");
+                    
+            int titleLength = titleText.Length;
+            descriptionTextbox.Click();
+            descriptionTextbox.SendKeys(description);
+            int descriptionLength = descriptionTextbox.Text.Length;
+            categoryDropdownMenu.Click();
+            SelectElement oSelect = new SelectElement(categoryDropdownMenu);
+            oSelect.SelectByText(category);
+            startDate.SendKeys(beginDate);
+            save.Click();
+            
+                 
+          
+            string titleError = driver.FindElement(By.XPath("//div[2]/div/form/div[1]/div/div[2]/div/div[2]/div")).Text;
+            string descriptionError = driver.FindElement(By.XPath("//div[2]/div/form/div[2]/div/div[2]/div[2]/div")).Text;
+            Thread.Sleep(2000);
+            string categoryError = driver.FindElement(By.XPath("//div[2]/div/form/div[3]/div[2]/div/div[2]/div[2]/div")).Text;
+            string dateError = driver.FindElement(By.XPath("//div[2]/div/form/div[7]/div[2]/div[2]")).Text;
+                     
+            Assert.That(titleLength == 100, "Title textbox accepts more than 100 characters");
+            Assert.That(descriptionLength == 600, "Description textt box accepts more than 600 characters");
+            Assert.That(titleError == "Special characters are not allowed.", "Title field accepts null values");
+            Assert.That(descriptionError == "First character must be an alphabet character or a number.", "Description field accepts null values");
+            Assert.That(categoryError == "Subcategory is required", "Category field accepts null values");
+            Assert.That(dateError == "Start Date cannot be set to a day in the past", "Date field accepts past date");
 
         }
 
     }
 }
+
