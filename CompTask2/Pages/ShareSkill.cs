@@ -18,6 +18,8 @@ namespace CompTask2.Pages
 
         }
 
+        //Initiating web elements
+
         [FindsBy(How = How.XPath, Using = "//a[@class='ui basic green button']")]
         public IWebElement shareSkillButton;
 
@@ -88,7 +90,7 @@ namespace CompTask2.Pages
         public IWebElement listTitle;
         
 
-
+        //creating service listing
         public void AddShareSkill(string title, string description, string category, string subcategory,
                                     string addtags, string serviceType, string locationType, string daysAvaialable, string beginDate,
                                     string finishDate, string starttime, string endtime, string skilltrade, string skilltags, string charge,
@@ -249,22 +251,26 @@ namespace CompTask2.Pages
             shareSkillButton.Click();
             titleTextbox.Click();
             titleTextbox.SendKeys(title);
+            string titleText = titleTextbox.GetAttribute("Value");
+                    
+            int titleLength = titleText.Length;
             descriptionTextbox.Click();
             descriptionTextbox.SendKeys(description);
+            int descriptionLength = descriptionTextbox.Text.Length;
             categoryDropdownMenu.Click();
             SelectElement oSelect = new SelectElement(categoryDropdownMenu);
             oSelect.SelectByText(category);
             startDate.SendKeys(beginDate);
             save.Click();
             
-            int titleLength = title.Length;
-            int descriptionLength = description.Length;
+                 
+          
             string titleError = driver.FindElement(By.XPath("//div[2]/div/form/div[1]/div/div[2]/div/div[2]/div")).Text;
             string descriptionError = driver.FindElement(By.XPath("//div[2]/div/form/div[2]/div/div[2]/div[2]/div")).Text;
             Thread.Sleep(2000);
             string categoryError = driver.FindElement(By.XPath("//div[2]/div/form/div[3]/div[2]/div/div[2]/div[2]/div")).Text;
             string dateError = driver.FindElement(By.XPath("//div[2]/div/form/div[7]/div[2]/div[2]")).Text;
-            Console.WriteLine(titleLength);
+                     
             Assert.That(titleLength == 100, "Title textbox accepts more than 100 characters");
             Assert.That(descriptionLength == 600, "Description textt box accepts more than 600 characters");
             Assert.That(titleError == "Special characters are not allowed.", "Title field accepts null values");
